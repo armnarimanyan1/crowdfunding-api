@@ -1,25 +1,39 @@
 const express = require("express")
 const bodyParser = require("body-parser")
-const ConnectDatabase = require("./database/DatabaseConfig");
 
-const port = process.env.PORT || 3002;
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server, {cors: {origin: "*"}});
 
-// connecting to database
-new ConnectDatabase().getConnection()
-    .then((res) => console.log(res))
-    .catch((err) => {
-        throw err
-    })
+const port = process.env.PORT || 3001;
 
-// routes
-const ProjectDetailsRoutes = require("./routes/ProjectDetailsRoutes")
+const cors = require("cors");
 
 // MIDDLEWARE
-const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(cors({
+    origin: "http://localhost:3000"
+}));
 
-// use routes
-app.use("/api/project-detail", ProjectDetailsRoutes);
+// socket
+const socket = io.on('connection', (socket) => {
+    console.log('a user connected');
 
-app.listen(port, () => console.log(`App listening on port ${port}!`))
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+const sendMessage = (msg) => {
+    socket.emit('status', msg);
+};
+
+app.post("/api/invoice-status", (req, res) => {
+    sendMessage(req.body);
+    res.send('Message sent');
+});
+
+server.listen(port, () => console.log(`Listening on port ${port}`));
