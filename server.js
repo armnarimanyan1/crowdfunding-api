@@ -9,10 +9,8 @@ const io = new Server(server, {cors: {origin: "*"}});
 
 const port = process.env.PORT || 3001;
 
-const Trend = require('./database/trendModel')
-
 /* Routes */
-const trendRoutes = require("./routes/TrendRoutes")
+const projectRoutes = require("./routes/projectRoutes")
 
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -40,7 +38,7 @@ const sendMessage = (msg) => {
     socket.emit('status', msg);
 };
 
-app.use("/api/trend", trendRoutes);
+app.use("/api/project", projectRoutes);
 
 app.post("/api/invoice-status", async(req, res) => {
     sendMessage(req.body);

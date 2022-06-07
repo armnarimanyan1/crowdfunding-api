@@ -26,7 +26,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const trendSchema = new Schema({
+const projectSchema = new Schema({
     name:  String, // String is shorthand for {type: String}
     handle: String,
     description: String,
@@ -50,4 +50,4 @@ const trendSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Trend', trendSchema);
+module.exports = mongoose.model('Project', projectSchema);
