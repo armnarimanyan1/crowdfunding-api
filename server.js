@@ -4,7 +4,7 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 const bodyParser = require("body-parser")
-const { socketConnection } = require('./helper/socket');
+const {socketConnection} = require('./helper/socket');
 const port = process.env.PORT || 3001;
 
 /* import routes */
@@ -16,15 +16,18 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors({
-    origin: "http://localhost:3001"
+    credentials: true,
+    origin: ["http://localhost:3000"]
 }));
 
 /* connect database */
 const mongoose = require("mongoose");
 
 mongoose.connect(process.env.DB_CONNECT)
-.then(() => console.log("connected to the database"))
-.catch(err => { throw err});
+    .then(() => console.log("connected to the database"))
+    .catch(err => {
+        throw err
+    });
 
 /* socket connection */
 socketConnection(server);
