@@ -1,23 +1,17 @@
 const express = require("express")
-const bodyParser = require("body-parser")
-
-const app = express();
+const cors = require("cors");
 const http = require('http');
+const app = express();
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server, {cors: {origin: "*"}});
-
+const bodyParser = require("body-parser")
+const { socketConnection } = require('./helper/socket');
 const port = process.env.PORT || 3001;
 
-/* Routes */
+/* import routes */
 const projectRoutes = require("./routes/projectRoutes")
+const invoiceRoutes = require("./routes/invoiceRoutes")
 
-const cors = require("cors");
-const mongoose = require("mongoose");
-
-mongoose.connect(process.env.DB_CONNECT);
-
-// MIDDLEWARE
+/* middlwares */
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -25,23 +19,18 @@ app.use(cors({
     origin: "http://localhost:3001"
 }));
 
-// socket
-const socket = io.on('connection', (socket) => {
-    console.log('a user connected');
+/* connect database */
+const mongoose = require("mongoose");
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-});
+mongoose.connect(process.env.DB_CONNECT)
+.then(() => console.log("connected to the database"))
+.catch(err => { throw err});
 
-const sendMessage = (msg) => {
-    socket.emit('status', msg);
-};
+/* socket connection */
+socketConnection(server);
 
+/* routes */
 app.use("/api/project", projectRoutes);
+app.use("/api/invoice", invoiceRoutes);
 
-app.post("/api/invoice-status", async(req, res) => {
-    sendMessage(req.body);
-    await res.send('Message sent');
-});
 server.listen(port, () => console.log(`Listening on port ${port}`));
