@@ -1,6 +1,11 @@
 let io;
 exports.socketConnection = (server) => {
-    io = require('socket.io')(server);
+    const { Server } = require("socket.io");
+    io = new Server(server, {
+        cors: {
+            origin: process.env.REACT_ORIGIN,
+        }
+    });
 
     io.on('connection', (socket) => {
         console.info(`Client connected [id=${socket.id}]`);

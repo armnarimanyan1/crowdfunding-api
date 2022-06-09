@@ -11,13 +11,13 @@ const port = process.env.PORT || 3001;
 const projectRoutes = require("./routes/projectRoutes")
 const invoiceRoutes = require("./routes/invoiceRoutes")
 
-/* middlwares */
+/* middleware */
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors({
     credentials: true,
-    origin: ["http://localhost:3000"]
+    origin: [process.env.REACT_ORIGIN]
 }));
 
 /* connect database */
