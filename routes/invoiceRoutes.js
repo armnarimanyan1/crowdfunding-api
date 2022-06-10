@@ -5,6 +5,6 @@ const { Router } = require("express");
 
 const router = Router();
 
-router.get("/status", invoiceController.getStatus.bind(invoiceController));
+router.post("/status", invoiceController.getStatus.bind(invoiceController));
 
 module.exports = router;
