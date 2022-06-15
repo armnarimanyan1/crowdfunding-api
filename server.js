@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors({
     credentials: true,
-    origin: [process.env.REACT_ORIGIN, "https://zigurat-api.herokuapp.com"]
+    origin: [process.env.REACT_ORIGIN_DEVELOPMENT, process.env.REACT_ORIGIN_PRODUCTION]
 }));
 
 /* connect database */
