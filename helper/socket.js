@@ -3,7 +3,7 @@ exports.socketConnection = (server) => {
     const { Server } = require("socket.io");
     io = new Server(server, {
         cors: {
-            origin: [process.env.REACT_ORIGIN_DEVELOPMENT, process.env.REACT_ORIGIN_PRODUCTION],
+            origin: '*',
         }
     });
 
